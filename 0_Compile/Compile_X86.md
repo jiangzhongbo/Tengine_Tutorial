@@ -38,6 +38,9 @@ cmake ..
 ```
 make -j4 && make install
 ```
+
+## 测试
+
 编译没有问题的话，把 https://github.com/jiangzhongbo/Tengine_Tutorial/tree/master/0_Compile 中的cat.jpg，squeezenet_caffe.tmfile放到Tengine/build/install/bin目录下，然后执行下面命令
 ```
 cd Tengine/build/install/bin
@@ -64,6 +67,8 @@ Repeat 1 times, thread 1, avg time 33.31 ms, max_time 33.31 ms, min_time 33.31 m
 --------------------------------------
 ```
 自此Tengine X86版本编译成功。
+
+## 自动编译脚本
 
 自动编译测试脚本
 ```
