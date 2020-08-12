@@ -92,3 +92,7 @@ cp ../../../../Tengine_Tutorial/0_Compile/squeezenet_caffe.tmfile ./
 wget https://raw.githubusercontent.com/jiangzhongbo/Tengine_Tutorial/master/0_Compile/compile_tengine_x86.sh
 sh compile_tengine_x86.sh
 ```
+
+## 参考
+
+[https://github.com/OAID/Tengine/wiki/Tengine源码编译](https://github.com/OAID/Tengine/wiki/Tengine源码编译)
