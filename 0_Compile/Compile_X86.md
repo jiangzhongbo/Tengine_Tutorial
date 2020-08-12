@@ -38,7 +38,7 @@ cmake ..
 ```
 make -j4 && make install
 ```
-编译没有问题的话，把cat.jpg，squeezenet_caffe.tmfile放到Tengine/build/install/bin目录下，然后执行下面命令
+编译没有问题的话，把 https://github.com/jiangzhongbo/Tengine_Tutorial/tree/master/0_Compile 中的cat.jpg，squeezenet_caffe.tmfile放到Tengine/build/install/bin目录下，然后执行下面命令
 ```
 cd Tengine/build/install/bin
 ./tm_classification -m squeezenet_caffe.tmfile -i ./cat.jpg
@@ -82,4 +82,9 @@ cp ../../../../Tengine_Tutorial/0_Compile/cat.jpg ./
 cp ../../../../Tengine_Tutorial/0_Compile/squeezenet_caffe.tmfile ./
 
 ./tm_classification -m squeezenet_caffe.tmfile -i ./cat.jpg
+```
+你可以直接
+```
+wget https://raw.githubusercontent.com/jiangzhongbo/Tengine_Tutorial/master/0_Compile/compile_tengine_x86.sh
+sh compile_tengine_x86.sh
 ```
