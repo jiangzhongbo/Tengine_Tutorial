@@ -70,7 +70,6 @@ Repeat 1 times, thread 1, avg time 33.31 ms, max_time 33.31 ms, min_time 33.31 m
 
 ## 自动编译脚本
 
-自动编译测试脚本
 ```
 sudo apt-get install cmake make g++ git -y
 
