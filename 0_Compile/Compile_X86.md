@@ -38,7 +38,7 @@ cmake ..
 ```
 make -j4 && make install
 ```
-编译没有问题的话，把[cat.jpg](),[squeezenet_caffe.tmfile]()放到Tengine/build/install/bin目录下，然后执行下面命令
+编译没有问题的话，把cat.jpg，squeezenet_caffe.tmfile放到Tengine/build/install/bin目录下，然后执行下面命令
 ```
 cd Tengine/build/install/bin
 ./tm_classification -m squeezenet_caffe.tmfile -i ./cat.jpg
@@ -67,10 +67,10 @@ Repeat 1 times, thread 1, avg time 33.31 ms, max_time 33.31 ms, min_time 33.31 m
 
 自动编译测试脚本
 ```
-sudo apt-get install cmake make g++ git wget -y
+sudo apt-get install cmake make g++ git -y
 
 git clone https://github.com/OAID/Tengine.git
-
+git clone https://github.com/jiangzhongbo/Tengine_Tutorial
 cd Tengine
 mkdir build 
 cd build
@@ -78,8 +78,8 @@ cmake ..
 make -j4 && make install
 
 cd ./install/bin
-wget squeezenet_caffe.tmfile
-wget cat.jpg
+cp ../../../../Tengine_Tutorial/0_Compile/cat.jpg ./
+cp ../../../../Tengine_Tutorial/0_Compile/squeezenet_caffe.tmfile ./
 
 ./tm_classification -m squeezenet_caffe.tmfile -i ./cat.jpg
 ```
