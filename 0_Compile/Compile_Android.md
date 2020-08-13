@@ -147,3 +147,6 @@ wget https://raw.githubusercontent.com/jiangzhongbo/Tengine_Tutorial/master/0_Co
 sh compile_tengine_android.sh
 ```
 
+## 参考
+
+[https://github.com/OAID/Tengine/wiki/Tengine源码编译](https://github.com/OAID/Tengine/wiki/Tengine源码编译)
