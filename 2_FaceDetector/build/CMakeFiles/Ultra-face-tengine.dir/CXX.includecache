@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../tengine/include/tengine_c_api.h
+stdint.h
+-
+stddef.h
+-
+tengine_c_compat.h
+../tengine/include/tengine_c_compat.h
+
+/home/oal/ssd_data/workspace/Tengine_Tutorial/2_FaceDetector/src/UltraFace.cpp
+UltraFace.hpp
+/home/oal/ssd_data/workspace/Tengine_Tutorial/2_FaceDetector/src/UltraFace.hpp
+
+/home/oal/ssd_data/workspace/Tengine_Tutorial/2_FaceDetector/src/UltraFace.hpp
+tengine_c_api.h
+/home/oal/ssd_data/workspace/Tengine_Tutorial/2_FaceDetector/src/tengine_c_api.h
+opencv2/opencv.hpp
+-
+algorithm
+-
+iostream
+-
+string
+-
+vector
+-
+memory
+-
+chrono
+-
+
+/home/oal/ssd_data/workspace/Tengine_Tutorial/2_FaceDetector/src/main.cpp
+UltraFace.hpp
+/home/oal/ssd_data/workspace/Tengine_Tutorial/2_FaceDetector/src/UltraFace.hpp
+iostream
+-
+opencv2/opencv.hpp
+-
+

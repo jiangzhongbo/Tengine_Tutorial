@@ -1,16 +1,9 @@
-//  Created by Linzaer on 2019/11/15.
-//  Copyright © 2019 Linzaer. All rights reserved.
-
 #ifndef UltraFace_hpp
 #define UltraFace_hpp
 
 #pragma once
 
-#include "Interpreter.hpp"
-
-#include "MNNDefine.h"
-#include "Tensor.hpp"
-#include "ImageProcess.hpp"
+#include "tengine_c_api.h"
 #include <opencv2/opencv.hpp>
 #include <algorithm>
 #include <iostream>
@@ -33,7 +26,7 @@ typedef struct FaceInfo {
 
 class UltraFace {
 public:
-    UltraFace(const std::string &mnn_path,
+    UltraFace(const std::string &tengine_path,
               int input_width, int input_length, int num_thread_ = 4, float score_threshold_ = 0.7, float iou_threshold_ = 0.3,
               int topk_ = -1);
 
@@ -42,15 +35,14 @@ public:
     int detect(cv::Mat &img, std::vector<FaceInfo> &face_list);
 
 private:
-    void generateBBox(std::vector<FaceInfo> &bbox_collection, MNN::Tensor *scores, MNN::Tensor *boxes);
+    void generateBBox(std::vector<FaceInfo> &bbox_collection, tensor_t scores, tensor_t boxes);
 
     void nms(std::vector<FaceInfo> &input, std::vector<FaceInfo> &output, int type = blending_nms);
 
 private:
 
-    std::shared_ptr<MNN::Interpreter> ultraface_interpreter;
-    MNN::Session *ultraface_session = nullptr;
-    MNN::Tensor *input_tensor = nullptr;
+    graph_t graph = nullptr;
+    tensor_t input_tensor = nullptr;
 
     int num_thread;
     int image_w;

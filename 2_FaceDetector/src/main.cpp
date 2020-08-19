@@ -1,6 +1,3 @@
-//  Created by Linzaer on 2019/11/15.
-//  Copyright © 2019 Linzaer. All rights reserved.
-
 #include "UltraFace.hpp"
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -9,12 +6,12 @@ using namespace std;
 
 int main(int argc, char **argv) {
     if (argc <= 2) {
-        fprintf(stderr, "Usage: %s <mnn .mnn> [image files...]\n", argv[0]);
+        fprintf(stderr, "Usage: %s <tengine .tengine> [image files...]\n", argv[0]);
         return 1;
     }
 
-    string mnn_path = argv[1];
-    UltraFace ultraface(mnn_path, 320, 240, 4, 0.65); // config model input
+    string tengine_path = argv[1];
+    UltraFace ultraface(tengine_path, 320, 240, 4, 0.65); // config model input
 
     for (int i = 2; i < argc; i++) {
         string image_file = argv[i];

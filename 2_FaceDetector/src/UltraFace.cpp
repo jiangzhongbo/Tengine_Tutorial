@@ -1,13 +1,10 @@
-//  Created by Linzaer on 2019/11/15.
-//  Copyright © 2019 Linzaer. All rights reserved.
-
 #define clip(x, y) (x < 0 ? 0 : (x > y ? y : x))
 
 #include "UltraFace.hpp"
 
 using namespace std;
 
-UltraFace::UltraFace(const std::string &mnn_path,
+UltraFace::UltraFace(const std::string &tengine_path,
                      int input_width, int input_length, int num_thread_,
                      float score_threshold_, float iou_threshold_, int topk_) {
     num_thread = num_thread_;
@@ -49,22 +46,37 @@ UltraFace::UltraFace(const std::string &mnn_path,
 
     num_anchors = priors.size();
 
-    ultraface_interpreter = std::shared_ptr<MNN::Interpreter>(MNN::Interpreter::createFromFile(mnn_path.c_str()));
-    MNN::ScheduleConfig config;
-    config.numThread = num_thread;
-    MNN::BackendConfig backendConfig;
-    backendConfig.precision = (MNN::BackendConfig::PrecisionMode) 2;
-    config.backendConfig = &backendConfig;
+    graph = create_graph(nullptr, "tengine", tengine_path.c_str());
 
-    ultraface_session = ultraface_interpreter->createSession(config);
+    int dims[] = {1, 3, 240, 320};
 
-    input_tensor = ultraface_interpreter->getSessionInput(ultraface_session, nullptr);
+    input_tensor = get_graph_tensor(graph, "input");
+
+    if (nullptr == input_tensor)
+    {
+        printf("Get input tensor failed\n");
+        exit(0);
+    }
+
+    if (0 != set_tensor_shape(input_tensor, dims, 4))
+    {
+        printf("Set input tensor shape failed\n");
+        exit(0);
+    }
+
+    if (0 != prerun_graph(graph))
+    {
+        printf("Pre-run graph failed\n");
+        exit(0);
+    }
 
 }
 
 UltraFace::~UltraFace() {
-    ultraface_interpreter->releaseModel();
-    ultraface_interpreter->releaseSession(ultraface_session);
+    release_graph_tensor(input_tensor);
+    postrun_graph(graph);
+    destroy_graph(graph);
+    release_tengine();
 }
 
 int UltraFace::detect(cv::Mat &raw_image, std::vector<FaceInfo> &face_list) {
@@ -78,33 +90,32 @@ int UltraFace::detect(cv::Mat &raw_image, std::vector<FaceInfo> &face_list) {
     cv::Mat image;
     cv::resize(raw_image, image, cv::Size(in_w, in_h));
 
-    ultraface_interpreter->resizeTensor(input_tensor, {1, 3, in_h, in_w});
-    ultraface_interpreter->resizeSession(ultraface_session);
-    std::shared_ptr<MNN::CV::ImageProcess> pretreat(
-            MNN::CV::ImageProcess::create(MNN::CV::BGR, MNN::CV::RGB, mean_vals, 3,
-                                          norm_vals, 3));
-    pretreat->convert(image.data, in_w, in_h, image.step[0], input_tensor);
+    image.convertTo(image, CV_32FC3);
+    image = (image - 127.0) / 128.0;
+
+
+    if (set_tensor_buffer(input_tensor, image.data, (image_h * image_w * 3) * 4) < 0)
+    {
+        printf("Set input tensor buffer failed\n");
+        return -1;
+    }
 
     auto start = chrono::steady_clock::now();
 
 
     // run network
-    ultraface_interpreter->runSession(ultraface_session);
+    if (run_graph(graph, 1) < 0)
+    {
+        printf("Run graph failed\n");
+        return -1;
+    }
 
     // get output data
 
     string scores = "scores";
     string boxes = "boxes";
-    MNN::Tensor *tensor_scores = ultraface_interpreter->getSessionOutput(ultraface_session, scores.c_str());
-    MNN::Tensor *tensor_boxes = ultraface_interpreter->getSessionOutput(ultraface_session, boxes.c_str());
-
-    MNN::Tensor tensor_scores_host(tensor_scores, tensor_scores->getDimensionType());
-
-    tensor_scores->copyToHostTensor(&tensor_scores_host);
-
-    MNN::Tensor tensor_boxes_host(tensor_boxes, tensor_boxes->getDimensionType());
-
-    tensor_boxes->copyToHostTensor(&tensor_boxes_host);
+    tensor_t tensor_scores = get_graph_tensor(graph, scores.c_str());
+    tensor_t tensor_boxes = get_graph_tensor(graph, boxes.c_str());
 
     std::vector<FaceInfo> bbox_collection;
 
@@ -118,20 +129,22 @@ int UltraFace::detect(cv::Mat &raw_image, std::vector<FaceInfo> &face_list) {
     return 0;
 }
 
-void UltraFace::generateBBox(std::vector<FaceInfo> &bbox_collection, MNN::Tensor *scores, MNN::Tensor *boxes) {
+void UltraFace::generateBBox(std::vector<FaceInfo> &bbox_collection, tensor_t scores, tensor_t boxes) {
+    float* scores_blob = ( float* )get_tensor_buffer(scores);
+    float* boxes_blob = ( float* )get_tensor_buffer(boxes);
     for (int i = 0; i < num_anchors; i++) {
-        if (scores->host<float>()[i * 2 + 1] > score_threshold) {
+        if (scores_blob[i * 2 + 1] > score_threshold) {
             FaceInfo rects;
-            float x_center = boxes->host<float>()[i * 4] * center_variance * priors[i][2] + priors[i][0];
-            float y_center = boxes->host<float>()[i * 4 + 1] * center_variance * priors[i][3] + priors[i][1];
-            float w = exp(boxes->host<float>()[i * 4 + 2] * size_variance) * priors[i][2];
-            float h = exp(boxes->host<float>()[i * 4 + 3] * size_variance) * priors[i][3];
+            float x_center = boxes_blob[i * 4] * center_variance * priors[i][2] + priors[i][0];
+            float y_center = boxes_blob[i * 4 + 1] * center_variance * priors[i][3] + priors[i][1];
+            float w = exp(boxes_blob[i * 4 + 2] * size_variance) * priors[i][2];
+            float h = exp(boxes_blob[i * 4 + 3] * size_variance) * priors[i][3];
 
             rects.x1 = clip(x_center - w / 2.0, 1) * image_w;
             rects.y1 = clip(y_center - h / 2.0, 1) * image_h;
             rects.x2 = clip(x_center + w / 2.0, 1) * image_w;
             rects.y2 = clip(y_center + h / 2.0, 1) * image_h;
-            rects.score = clip(scores->host<float>()[i * 2 + 1], 1);
+            rects.score = clip(scores_blob[i * 2 + 1], 1);
             bbox_collection.push_back(rects);
         }
     }

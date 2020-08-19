@@ -1,15 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
-project(Ultra-face-mnn)
+project(Ultra-face-tengine)
 
 set(CMAKE_CXX_STANDARD 11)
 
 find_package(OpenCV REQUIRED)
-include_directories(
-        mnn/include
-        src
-)
+include_directories(tengine/include/)
+include_directories(src/)
 
-link_directories(mnn/lib)
+add_library(tengine SHARED IMPORTED)
+set_target_properties(tengine PROPERTIES IMPORTED_LOCATION tengine/lib/libtengine-lite.so)
 
-add_executable(Ultra-face-mnn src/main.cpp src/UltraFace.cpp)
-target_link_libraries(Ultra-face-mnn MNN ${OpenCV_LIBS})
+add_executable(Ultra-face-tengine src/main.cpp src/UltraFace.cpp)
+target_link_libraries(Ultra-face-tengine tengine ${OpenCV_LIBS})
