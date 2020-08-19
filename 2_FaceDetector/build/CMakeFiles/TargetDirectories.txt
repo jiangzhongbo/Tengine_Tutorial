@@ -1,3 +1,0 @@
-/home/oal/ssd_data/workspace/Tengine_Tutorial/2_FaceDetector/build/CMakeFiles/rebuild_cache.dir
-/home/oal/ssd_data/workspace/Tengine_Tutorial/2_FaceDetector/build/CMakeFiles/Ultra-face-tengine.dir
-/home/oal/ssd_data/workspace/Tengine_Tutorial/2_FaceDetector/build/CMakeFiles/edit_cache.dir
