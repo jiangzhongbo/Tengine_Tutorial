@@ -8,7 +8,7 @@ include_directories(tengine/include/)
 include_directories(src/)
 
 add_library(tengine SHARED IMPORTED)
-set_target_properties(tengine PROPERTIES IMPORTED_LOCATION tengine/lib/libtengine-lite.so)
+set_target_properties(tengine PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/tengine/lib/libtengine-lite.so)
 
 add_executable(Ultra-face-tengine src/main.cpp src/UltraFace.cpp)
 target_link_libraries(Ultra-face-tengine tengine ${OpenCV_LIBS})
