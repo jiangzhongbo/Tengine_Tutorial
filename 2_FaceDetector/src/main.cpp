@@ -22,6 +22,8 @@ int main(int argc, char **argv) {
         vector<FaceInfo> face_info;
         ultraface.detect(frame, face_info);
 
+        cout << "face_info " << face_info.size() << endl;
+
         for (auto face : face_info) {
             cv::Point pt1(face.x1, face.y1);
             cv::Point pt2(face.x2, face.y2);
@@ -31,8 +33,8 @@ int main(int argc, char **argv) {
         auto end = chrono::steady_clock::now();
         chrono::duration<double> elapsed = end - start;
         cout << "all time: " << elapsed.count() << " s" << endl;
-        cv::imshow("UltraFace", frame);
-        cv::waitKey();
+        // cv::imshow("UltraFace", frame);
+        // cv::waitKey();
         string result_name = "result" + to_string(i) + ".jpg";
         cv::imwrite(result_name, frame);
     }

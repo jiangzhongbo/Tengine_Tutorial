@@ -39,6 +39,8 @@ private:
 
     void nms(std::vector<FaceInfo> &input, std::vector<FaceInfo> &output, int type = blending_nms);
 
+    void get_input_data_cv(const cv::Mat& sample, float* input_data, int img_h, int img_w, const float* mean, const float* scale, int swapRB = 0);
+
 private:
 
     graph_t graph = nullptr;

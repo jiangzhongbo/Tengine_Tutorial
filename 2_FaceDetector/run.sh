@@ -1,0 +1,1 @@
+ ./build/Ultra-face-tengine /home/oal/ssd_data/workspace/Tengine_Tutorial/2_FaceDetector/models/version-RFB-320_simplified.tmfile ./imgs/1.jpg 

@@ -46,11 +46,20 @@ UltraFace::UltraFace(const std::string &tengine_path,
 
     num_anchors = priors.size();
 
+    if (init_tengine() != 0)
+    {
+        fprintf(stderr, "Initial tengine failed.\n");
+        exit(0);
+    }
+
+    cout<<tengine_path<<endl;
     graph = create_graph(nullptr, "tengine", tengine_path.c_str());
+
 
     int dims[] = {1, 3, 240, 320};
 
     input_tensor = get_graph_tensor(graph, "input");
+
 
     if (nullptr == input_tensor)
     {
@@ -87,14 +96,12 @@ int UltraFace::detect(cv::Mat &raw_image, std::vector<FaceInfo> &face_list) {
 
     image_h = raw_image.rows;
     image_w = raw_image.cols;
-    cv::Mat image;
-    cv::resize(raw_image, image, cv::Size(in_w, in_h));
 
-    image.convertTo(image, CV_32FC3);
-    image = (image - 127.0) / 128.0;
+    int img_size      = in_w * in_h * 3;
+    float* input_data = ( float* )malloc(img_size * sizeof(float));
+    get_input_data_cv(raw_image, input_data, in_w, in_h, mean_vals, norm_vals, 0);
 
-
-    if (set_tensor_buffer(input_tensor, image.data, (image_h * image_w * 3) * 4) < 0)
+    if (set_tensor_buffer(input_tensor, input_data, (in_w * in_h * 3) * 4) < 0)
     {
         printf("Set input tensor buffer failed\n");
         return -1;
@@ -126,6 +133,9 @@ int UltraFace::detect(cv::Mat &raw_image, std::vector<FaceInfo> &face_list) {
 
     generateBBox(bbox_collection, tensor_scores, tensor_boxes);
     nms(bbox_collection, face_list);
+
+    free(input_data);
+
     return 0;
 }
 
@@ -228,6 +238,43 @@ void UltraFace::nms(std::vector<FaceInfo> &input, std::vector<FaceInfo> &output,
             default: {
                 printf("wrong type of nms.");
                 exit(-1);
+            }
+        }
+    }
+}
+
+void UltraFace::get_input_data_cv(const cv::Mat& sample, float* input_data, int img_w, int img_h, const float* mean, const float* scale, int swapRB)
+{
+    cv::Mat img;
+    if(sample.channels() == 4)
+    {
+        cv::cvtColor(sample, img, cv::COLOR_BGRA2BGR);
+    }
+    else if(sample.channels() == 1)
+    {
+        cv::cvtColor(sample, img, cv::COLOR_GRAY2BGR);
+    }
+    else if(sample.channels() == 3 && swapRB == 1)
+    {
+        cv::cvtColor(sample, img, cv::COLOR_BGR2RGB);
+    }
+    else
+    {
+        img = sample;
+    }
+
+    cv::resize(img, img, cv::Size(img_w, img_h));
+    img.convertTo(img, CV_32FC3);
+    float* img_data = ( float* )img.data;
+    int hw = img_w * img_h;
+    for(int w = 0; w < img_w; w++)
+    {
+        for(int h = 0; h < img_h; h++)
+        {
+            for(int c = 0; c < 3; c++)
+            {
+                input_data[c * hw + w * img_h + h] = (*img_data - mean[c]) * scale[c];
+                img_data++;
             }
         }
     }
