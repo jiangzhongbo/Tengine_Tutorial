@@ -492,3 +492,8 @@ all time: 0.0234363 s
 ## 结果
 
 ![](./result2.jpg)
+
+## 参考
+
+1. [https://github.com/Linzaer/Ultra-Light-Fast-Generic-Face-Detector-1MB](https://github.com/Linzaer/Ultra-Light-Fast-Generic-Face-Detector-1MB)
+2. [https://github.com/OAID/Tengine](https://github.com/OAID/Tengine)
