@@ -1,5 +1,7 @@
 # Tengine 人脸检测 Android版
 
+**所有内容都在 [FaceDetector_Android](https://github.com/jiangzhongbo/Tengine_Tutorial/tree/master/3_FaceDetector_Android/Android) 如果有什么不清楚的直接看代码**
+
 ## 准备
 
 1. 用 Android Studio 建立一个空白Android项目
@@ -196,3 +198,8 @@ FaceDetector.release();
 |  原图   | 效果  |
 |  ----  | ----  |
 | ![](imgs/girls.jpg)  | ![](imgs/girls.png) |
+
+## 参考
+
+1. [https://github.com/Linzaer/Ultra-Light-Fast-Generic-Face-Detector-1MB](https://github.com/Linzaer/Ultra-Light-Fast-Generic-Face-Detector-1MB)
+2. [https://github.com/OAID/Tengine](https://github.com/OAID/Tengine)
