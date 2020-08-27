@@ -25,7 +25,7 @@ ndk.dir=D\:\\Android_ENV\\android-ndk-r16b
 
 ## 编写CMakeLists.txt和配套build.gradle
 
-和X86版本比较大的区别就是改OpenCV为Android版本，OpenCV地址改为你下载解压后的地址
+1. 和X86版本比较大的区别就是改OpenCV为Android版本，OpenCV地址改为你下载解压后的地址
 
 ```
 set(OpenCV_DIR "D:/Android_ENV/OpenCV-android-sdk/sdk/native/jni")
@@ -33,13 +33,13 @@ find_package(OpenCV 3.4 REQUIRED)
 include_directories(D:/Android_ENV/OpenCV-android-sdk/sdk/native/jni/include)
 ```
 
-改了动态链接库的名字
+2. 改了动态链接库的名字
 ```
 project(FaceDetect)
 ```
 这个后面写JNI的时候会用到。
 
-因为我们用了CMakeLists.txt，所以需要修改下build.gradle
+3. 因为我们用了CMakeLists.txt，所以需要修改下build.gradle
 
 ```
 android {
