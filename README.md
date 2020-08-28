@@ -1,6 +1,6 @@
 # Tengine 入门教程
 
-Tengine入门教程借助了社区力量，将非常优秀的人脸检测模型[💎1MB lightweight face detection model (1MB轻量级人脸检测模型)](https://github.com/Linzaer/Ultra-Light-Fast-Generic-Face-Detector-1MB)，经过AI推理引擎Tengine，移植到Linux，Android平台
+Tengine入门教程借助了社区力量，将非常优秀的人脸检测模型[💎1MB lightweight face detection model (1MB轻量级人脸检测模型)](https://github.com/Linzaer/Ultra-Light-Fast-Generic-Face-Detector-1MB)，经过AI推理引擎[Tengine](https://github.com/OAID/Tengine)，移植到Linux，Android平台
 
 通过[💎1MB lightweight face detection model (1MB轻量级人脸检测模型)](https://github.com/Linzaer/Ultra-Light-Fast-Generic-Face-Detector-1MB)，它提供了
 
