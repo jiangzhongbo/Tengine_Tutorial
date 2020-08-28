@@ -2,7 +2,7 @@
 
 这篇是[第4篇-Tengine 人脸检测 Android版](https://zhuanlan.zhihu.com/p/202616595)的扩展，我们将用[TengineKit](https://github.com/OAID/TengineKit)，把Android Camera输入的YUV格式的视频流转为一帧帧的Bitmap，然后用上第4篇写的人脸检测，快速的变成一个Android Camera应用。
 
-源码在此处[FaceDetector_Android_Camera]()
+源码在此处[FaceDetector_Android_Camera](https://github.com/jiangzhongbo/Tengine_Tutorial/tree/master/4_FaceDetector_Android_Camera)
 
 ## TengineKit
 
