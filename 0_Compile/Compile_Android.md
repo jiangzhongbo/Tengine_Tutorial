@@ -83,6 +83,7 @@ adb push ./bin/squeezenet_caffe.tmfile /data/local/tmp/
 adb shell
 cd /data/local/tmp/
 export LD_LIBRARY_PATH=.
+chmod +x tm_classification
 ./tm_classification -m squeezenet_caffe.tmfile -i cat.jpg
 ```
 输出
